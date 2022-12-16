@@ -1,8 +1,11 @@
 package com.marui.mapper;
 
+import com.marui.condition.UserCondition;
 import com.marui.entity.User;
 import com.marui.handler.SimpleReturnHandler;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @author marui
@@ -17,5 +20,8 @@ public interface UserMapper {
 
 
     boolean insert(@Param("user") User user);
+
+
+    List<User> selectByCondition(@Param("query") UserCondition condition);
 
 }

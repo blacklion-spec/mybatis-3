@@ -1,5 +1,7 @@
 package com.marui.entity;
 
+import java.io.Serializable;
+
 /**
  * @author marui
  * @version 1.0.0
@@ -7,7 +9,8 @@ package com.marui.entity;
  * @Description
  * @createTime 2022年01月03日 16:33:00
  */
-public class User {
+public class User implements Serializable {
+
 
 
     private Integer id;
@@ -18,7 +21,6 @@ public class User {
 
     private String pwd;
 
-    private Gender gender;
 
 
     public Integer getId() {
@@ -45,13 +47,6 @@ public class User {
         this.pwd = pwd;
     }
 
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
 
     @Override
     public String toString() {
@@ -59,7 +54,6 @@ public class User {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", pwd='" + pwd + '\'' +
-                ", gender=" + gender +
                 '}';
     }
 }

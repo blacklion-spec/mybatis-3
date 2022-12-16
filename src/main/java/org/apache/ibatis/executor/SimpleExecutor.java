@@ -31,7 +31,8 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
-/**SimpleExecutor，不会重用池化Statement，每次都会关闭
+/**负责一级缓存
+ * SimpleExecutor，不会重用池化Statement，每次都会关闭
  * @author Clinton Begin
  */
 public class SimpleExecutor extends BaseExecutor {

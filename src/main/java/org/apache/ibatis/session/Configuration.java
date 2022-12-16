@@ -708,7 +708,7 @@ public class Configuration {
       executor = new SimpleExecutor(this, transaction);
     }
     if (cacheEnabled) {
-      executor = new CachingExecutor(executor);
+      executor = new CachingExecutor(executor); //装饰
     }
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;
