@@ -119,9 +119,9 @@ public class TypeAliasRegistry {
       String key = string.toLowerCase(Locale.ENGLISH);
       Class<T> value;
       if (typeAliases.containsKey(key)) {
-        value = (Class<T>) typeAliases.get(key);
+        value = (Class<T>) typeAliases.get(key); //别名
       } else {
-        value = (Class<T>) Resources.classForName(string);
+        value = (Class<T>) Resources.classForName(string); //全限定名
       }
       return value;
     } catch (ClassNotFoundException e) {

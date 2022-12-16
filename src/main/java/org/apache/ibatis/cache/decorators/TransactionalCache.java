@@ -24,7 +24,8 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
-/**
+/**包装Cache
+ * 二级缓存事务性缓冲区,事务失败清楚缓冲区，Commit的时候才将键值对刷新到真正的cache
  * The 2nd level cache transactional buffer.
  * <p>
  * This class holds all cache entries that are to be added to the 2nd level cache during a Session.

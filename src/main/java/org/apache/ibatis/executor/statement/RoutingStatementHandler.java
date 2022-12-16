@@ -30,11 +30,12 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
 /**
+ * 封装PreparedStatement
  * @author Clinton Begin
  */
 public class RoutingStatementHandler implements StatementHandler {
 
-  private final StatementHandler delegate;
+  private final StatementHandler delegate; //装饰者模式，为什么要使用装饰者模式呢，这里没做任何增强啊
 
   public RoutingStatementHandler(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
 

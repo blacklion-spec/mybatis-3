@@ -27,8 +27,8 @@ import org.apache.ibatis.cache.Cache;
  */
 public class LruCache implements Cache {
 
-  private final Cache delegate;
-  private Map<Object, Object> keyMap;
+  private final Cache delegate; //委托
+  private Map<Object, Object> keyMap; //key value都是同样的值
   private Object eldestKey;
 
   public LruCache(Cache delegate) {
@@ -86,8 +86,8 @@ public class LruCache implements Cache {
 
   private void cycleKeyList(Object key) {
     keyMap.put(key, key);
-    if (eldestKey != null) {
-      delegate.removeObject(eldestKey);
+    if (eldestKey != null) { //年龄最大的key
+      delegate.removeObject(eldestKey); //用委托移除年龄最大的key
       eldestKey = null;
     }
   }

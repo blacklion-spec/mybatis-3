@@ -31,7 +31,7 @@ import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.reflection.ParamNameUtil;
 import org.apache.ibatis.session.Configuration;
 
-/**
+/**Mapper.xml 的 <resultMap type="com.marui.study.entity.User" id="usermap2" >
  * @author Clinton Begin
  */
 public class ResultMap {

@@ -28,7 +28,7 @@ import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
 
-/**
+/**生成动态sql的脚本语言
  * @author Eduardo Macarron
  */
 public class XMLLanguageDriver implements LanguageDriver {

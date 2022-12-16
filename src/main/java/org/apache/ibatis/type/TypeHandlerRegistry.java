@@ -394,7 +394,7 @@ public final class TypeHandlerRegistry {
       if (map == null || map == NULL_TYPE_HANDLER_MAP) {
         map = new HashMap<>();
       }
-      map.put(jdbcType, handler);
+      map.put(jdbcType, handler); //相同的javaType 不同的jdbcType的处理器会共存，都相同会覆盖，自己配置的会覆盖已经存在的
       typeHandlerMap.put(javaType, map);
     }
     allTypeHandlersMap.put(handler.getClass(), handler);

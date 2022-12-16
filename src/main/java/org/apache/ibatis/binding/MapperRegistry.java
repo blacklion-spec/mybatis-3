@@ -27,6 +27,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
 /**
+ * mapper.class注册在此处
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
@@ -34,7 +35,8 @@ import org.apache.ibatis.session.SqlSession;
 public class MapperRegistry {
 
   private final Configuration config;
-  private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
+  //MapperProxyFactory是为mapper.class生成代理对象的工厂
+  private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>(); //这里是在构建Configuration时就解析完的
 
   public MapperRegistry(Configuration config) {
     this.config = config;
@@ -57,14 +59,14 @@ public class MapperRegistry {
     return knownMappers.containsKey(type);
   }
 
-  public <T> void addMapper(Class<T> type) {
+  public <T> void addMapper(Class<T> type) { //添加Mapper.class
     if (type.isInterface()) {
       if (hasMapper(type)) {
         throw new BindingException("Type " + type + " is already known to the MapperRegistry.");
       }
       boolean loadCompleted = false;
       try {
-        knownMappers.put(type, new MapperProxyFactory<>(type));
+        knownMappers.put(type, new MapperProxyFactory<>(type)); //一个Mapper.class对应一个MapperProxyFactory
         // It's important that the type is added before the parser is run
         // otherwise the binding may automatically be attempted by the
         // mapper parser. If the type is already known, it won't try.

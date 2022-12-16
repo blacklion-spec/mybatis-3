@@ -28,6 +28,7 @@ import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
+//todo: marui：这到底有什么用啊
 /**
  * This is the default implementation of a MyBatis Cursor.
  * This implementation is not thread safe.
@@ -43,7 +44,7 @@ public class DefaultCursor<T> implements Cursor<T> {
   private final RowBounds rowBounds;
   protected final ObjectWrapperResultHandler<T> objectWrapperResultHandler = new ObjectWrapperResultHandler<>();
 
-  private final CursorIterator cursorIterator = new CursorIterator();
+  private final CursorIterator cursorIterator = new CursorIterator(); //组合关系，没有使用继承
   private boolean iteratorRetrieved;
 
   private CursorStatus status = CursorStatus.CREATED;

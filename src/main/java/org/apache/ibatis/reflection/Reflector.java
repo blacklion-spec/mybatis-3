@@ -46,6 +46,8 @@ import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.util.MapUtil;
 
 /**
+ * 这个类表示一组缓存的类的定义信息，下面是用来方便地在属性名和getter/setter之间进行映射的
+ *
  * This class represents a cached set of class definition information that
  * allows for easy mapping between property names and getter/setter methods.
  *
@@ -61,14 +63,14 @@ public class Reflector {
   private final Map<String, Invoker> getMethods = new HashMap<>();
   private final Map<String, Class<?>> setTypes = new HashMap<>();
   private final Map<String, Class<?>> getTypes = new HashMap<>();
-  private Constructor<?> defaultConstructor;
+  private Constructor<?> defaultConstructor; //无参构造函数
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
 
   public Reflector(Class<?> clazz) {
     type = clazz;
     addDefaultConstructor(clazz);
-    Method[] classMethods = getClassMethods(clazz);
+    Method[] classMethods = getClassMethods(clazz); //遍历该Class的所有方法，包括自己本身以及所有父类的
     if (isRecord(type)) {
       addRecordGetMethods(classMethods);
     } else {
@@ -308,8 +310,8 @@ public class Reflector {
 
   private void addUniqueMethods(Map<String, Method> uniqueMethods, Method[] methods) {
     for (Method currentMethod : methods) {
-      if (!currentMethod.isBridge()) {
-        String signature = getSignature(currentMethod);
+      if (!currentMethod.isBridge()) { //桥接方法是编译器自动生成的方法
+        String signature = getSignature(currentMethod); //返回方法的返回值+方法名+参数名
         // check to see if the method is already known
         // if it is known, then an extended class must have
         // overridden a method

@@ -50,6 +50,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * Mapper构建助手
  * @author Clinton Begin
  */
 public class MapperBuilderAssistant extends BaseBuilder {
@@ -130,7 +131,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Properties props) {
     Cache cache = new CacheBuilder(currentNamespace)
         .implementation(valueOrDefault(typeClass, PerpetualCache.class))
-        .addDecorator(valueOrDefault(evictionClass, LruCache.class))
+        .addDecorator(valueOrDefault(evictionClass, LruCache.class)) //装饰器
         .clearInterval(flushInterval)
         .size(size)
         .readWrite(readWrite)

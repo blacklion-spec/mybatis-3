@@ -16,6 +16,9 @@
 package org.apache.ibatis.session;
 
 /**
+ * 一级缓存的范围
+ * STATEMENT，同一个SqlSession，从数据库查询完后会放入缓存，然后立马会清除一级缓存，EXECUTOR的LocalCache就会清空一级缓存
+ * SESSION，同一个Session的查询，会被放入到一级缓存，再次查询时，将可能从一级缓存中获取，或者二级缓存（也就是说不会清空一级缓存）
  * @author Eduardo Macarron
  */
 public enum LocalCacheScope {

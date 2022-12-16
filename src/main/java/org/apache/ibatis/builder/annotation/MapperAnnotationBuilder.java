@@ -91,6 +91,7 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
 /**
+ * 注解的Mapper.class，解析构建器
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -113,11 +114,11 @@ public class MapperAnnotationBuilder {
   }
 
   public void parse() {
-    String resource = type.toString();
-    if (!configuration.isResourceLoaded(resource)) {
-      loadXmlResource();
+    String resource = type.toString(); //目标Mapper.class
+    if (!configuration.isResourceLoaded(resource)) { //判断该资源是否被加载
+      loadXmlResource();//加载同路径的mapper.xml
       configuration.addLoadedResource(resource);
-      assistant.setCurrentNamespace(type.getName());
+      assistant.setCurrentNamespace(type.getName()); //namespace就是类的全限定名，例如com.marui.test.Test
       parseCache();
       parseCacheRef();
       for (Method method : type.getMethods()) {
@@ -158,15 +159,16 @@ public class MapperAnnotationBuilder {
     }
   }
 
+  //加载Mapper.xml
   private void loadXmlResource() {
     // Spring may not know the real resource name so we check a flag
     // to prevent loading again a resource twice
     // this flag is set at XMLMapperBuilder#bindMapperForNamespace
     if (!configuration.isResourceLoaded("namespace:" + type.getName())) {
-      String xmlResource = type.getName().replace('.', '/') + ".xml";
+      String xmlResource = type.getName().replace('.', '/') + ".xml";//如果是加载Mapper.class，会加载同类路径的Mapper.xml
       // #1347
-      InputStream inputStream = type.getResourceAsStream("/" + xmlResource);
-      if (inputStream == null) {
+      InputStream inputStream = type.getResourceAsStream("/" + xmlResource); //此方法委托给该对象的类加载器加载资源
+      if (inputStream == null) {//使用目标mapper.class加载Mapper.xml失败，使用类加载器逐级加载
         // Search XML mapper that is not in the module but in the classpath.
         try {
           inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
@@ -174,13 +176,13 @@ public class MapperAnnotationBuilder {
           // ignore, resource is not required
         }
       }
-      if (inputStream != null) {
+      if (inputStream != null) { //解析Mapper.xml 也就是说配置了包扫描，会扫描同路径下的mapper.xml和mapper.class
         XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(), xmlResource, configuration.getSqlFragments(), type.getName());
         xmlParser.parse();
       }
     }
   }
-
+  //通过注解构建Cache，并注册到Configuration
   private void parseCache() {
     CacheNamespace cacheDomain = type.getAnnotation(CacheNamespace.class);
     if (cacheDomain != null) {
@@ -202,9 +204,9 @@ public class MapperAnnotationBuilder {
     }
     return props;
   }
-
+  //解析@CacheNamespaceRef注解
   private void parseCacheRef() {
-    CacheNamespaceRef cacheDomainRef = type.getAnnotation(CacheNamespaceRef.class);
+    CacheNamespaceRef cacheDomainRef = type.getAnnotation(CacheNamespaceRef.class); //就是namespace
     if (cacheDomainRef != null) {
       Class<?> refType = cacheDomainRef.value();
       String refName = cacheDomainRef.name();
@@ -214,11 +216,11 @@ public class MapperAnnotationBuilder {
       if (refType != void.class && !refName.isEmpty()) {
         throw new BuilderException("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
       }
-      String namespace = (refType != void.class) ? refType.getName() : refName;
+      String namespace = (refType != void.class) ? refType.getName() : refName;//获取类的权限定名作为namespace
       try {
         assistant.useCacheRef(namespace);
       } catch (IncompleteElementException e) {
-        configuration.addIncompleteCacheRef(new CacheRefResolver(assistant, namespace));
+        configuration.addIncompleteCacheRef(new CacheRefResolver(assistant, namespace)); //通过namespace查找不到的cache，会放入到IncompleteCacheRef，待接下来解析
       }
     }
   }

@@ -33,13 +33,14 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
+ * 装饰者模式，Configuration的cacheEnabled为true的话，会装饰另外一个Executor
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
-public class CachingExecutor implements Executor {
+public class CachingExecutor implements Executor { //一个SqlSession，一个Executor
 
   private final Executor delegate;
-  private final TransactionalCacheManager tcm = new TransactionalCacheManager();
+  private final TransactionalCacheManager tcm = new TransactionalCacheManager(); //不知道有啥用
 
   public CachingExecutor(Executor delegate) {
     this.delegate = delegate;
@@ -89,19 +90,20 @@ public class CachingExecutor implements Executor {
     return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 
+  //从二级缓存中获取数据
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql)
       throws SQLException {
-    Cache cache = ms.getCache();
+    Cache cache = ms.getCache(); //二级缓存
     if (cache != null) {
       flushCacheIfRequired(ms);
       if (ms.isUseCache() && resultHandler == null) {
         ensureNoOutParams(ms, boundSql);
         @SuppressWarnings("unchecked")
         List<E> list = (List<E>) tcm.getObject(cache, key);
-        if (list == null) {
+        if (list == null) { //缓存未命中
           list = delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
-          tcm.putObject(cache, key, list); // issue #578 and #116
+          tcm.putObject(cache, key, list); // issue #578 and #116 //暂存到事务性缓存中，commit时会提交到二级缓存
         }
         return list;
       }

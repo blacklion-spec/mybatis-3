@@ -31,7 +31,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
-/**
+/**SimpleExecutor，不会重用池化Statement，每次都会关闭
  * @author Clinton Begin
  */
 public class SimpleExecutor extends BaseExecutor {
@@ -81,6 +81,7 @@ public class SimpleExecutor extends BaseExecutor {
     return Collections.emptyList();
   }
 
+  //装备Statement
   private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
     Statement stmt;
     Connection connection = getConnection(statementLog);

@@ -23,6 +23,7 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ * Mapper.xml的parameterMap 的 <parameter property=""></parameter>
  * @author Clinton Begin
  */
 public class ParameterMapping {

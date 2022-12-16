@@ -201,9 +201,9 @@ public class ClassLoaderWrapper {
     return new ClassLoader[]{
         classLoader,
         defaultClassLoader,
-        Thread.currentThread().getContextClassLoader(),
+        Thread.currentThread().getContextClassLoader(), //当前线程的类加载器
         getClass().getClassLoader(),
-        systemClassLoader};
+        systemClassLoader}; //最后委托给系统类加载器，也就是最低级类加载器
   }
 
 }

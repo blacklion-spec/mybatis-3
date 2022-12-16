@@ -34,11 +34,13 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
+ * ReuseExecutor会重用同一个SqlSession的Statement
+ * Druid会缓存Statement，PreparedStatement,也就是池化，所以使用druid连接池，没必要使用ReuseExecutor
  * @author Clinton Begin
  */
 public class ReuseExecutor extends BaseExecutor {
 
-  private final Map<String, Statement> statementMap = new HashMap<>();
+  private final Map<String, Statement> statementMap = new HashMap<>();//String是Sql
 
   public ReuseExecutor(Configuration configuration, Transaction transaction) {
     super(configuration, transaction);

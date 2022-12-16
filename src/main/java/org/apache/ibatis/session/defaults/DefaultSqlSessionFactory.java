@@ -36,7 +36,7 @@ import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
  */
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
-  private final Configuration configuration;
+  private final Configuration configuration; //所有的配置，所有的Mapper都解析配置在此对象中
 
   public DefaultSqlSessionFactory(Configuration configuration) {
     this.configuration = configuration;
@@ -93,7 +93,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       final Environment environment = configuration.getEnvironment();
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
       tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
-      final Executor executor = configuration.newExecutor(tx, execType);
+      final Executor executor = configuration.newExecutor(tx, execType); //一个SqlSession包含一个Executor，而Executor包含一个Transaction
       return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (Exception e) {
       closeTransaction(tx); // may have fetched a connection so lets call close()

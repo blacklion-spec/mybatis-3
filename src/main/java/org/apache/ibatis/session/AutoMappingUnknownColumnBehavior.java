@@ -19,7 +19,7 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.MappedStatement;
 
-/**
+/**指定检测到自动映射目标的未知列（或未知属性类型）时的行为
  * Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
  *
  * @since 3.4.0
@@ -59,7 +59,7 @@ public enum AutoMappingUnknownColumnBehavior {
     }
   };
 
-  /**
+  /**枚举还可以定义抽象方法
    * Perform the action when detects an unknown column (or unknown property type) of automatic mapping target.
    * @param mappedStatement current mapped statement
    * @param columnName column name for mapping target

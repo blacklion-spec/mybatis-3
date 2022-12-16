@@ -27,6 +27,7 @@ import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
+ * 关于类的Getter Setter Filed的方法
  * @author Clinton Begin
  */
 public class MetaClass {

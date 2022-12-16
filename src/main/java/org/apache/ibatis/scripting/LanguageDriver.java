@@ -22,7 +22,7 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.Configuration;
-
+//生成动态sql的脚本语言
 public interface LanguageDriver {
 
   /**

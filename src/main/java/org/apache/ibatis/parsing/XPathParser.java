@@ -41,6 +41,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
+ * 使用JDK自带库解析mybatis config XML，并解析为Document
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -104,7 +105,7 @@ public class XPathParser {
 
   public XPathParser(InputStream inputStream, boolean validation, Properties variables) {
     commonConstructor(validation, variables, null);
-    this.document = createDocument(new InputSource(inputStream));
+    this.document = createDocument(new InputSource(inputStream)); //流的包装，就是个装饰过程，装饰模式
   }
 
   public XPathParser(Document document, boolean validation, Properties variables) {
@@ -121,7 +122,7 @@ public class XPathParser {
     commonConstructor(validation, variables, entityResolver);
     this.document = createDocument(new InputSource(reader));
   }
-
+  //variables:SqlSessionFactory传入的properties
   public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = createDocument(new InputSource(inputStream));
@@ -268,7 +269,7 @@ public class XPathParser {
     this.validation = validation;
     this.entityResolver = entityResolver;
     this.variables = variables;
-    XPathFactory factory = XPathFactory.newInstance();
+    XPathFactory factory = XPathFactory.newInstance(); //JDK自带Java解析工具
     this.xpath = factory.newXPath();
   }
 

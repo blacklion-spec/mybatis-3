@@ -60,7 +60,7 @@ public class SerializedCache implements Cache {
   }
 
   @Override
-  public Object getObject(Object key) {
+  public Object getObject(Object key) { //对对象进行反序列化，每次返回都是新的对象
     Object object = delegate.getObject(key);
     return object == null ? null : deserialize((byte[]) object);
   }
@@ -85,9 +85,9 @@ public class SerializedCache implements Cache {
     return delegate.equals(obj);
   }
 
-  private byte[] serialize(Serializable value) {
+  private byte[] serialize(Serializable value) { //将对象序列化为字节
     try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+        ObjectOutputStream oos = new ObjectOutputStream(bos)) { //输入输出流也是在装饰
       oos.writeObject(value);
       oos.flush();
       return bos.toByteArray();

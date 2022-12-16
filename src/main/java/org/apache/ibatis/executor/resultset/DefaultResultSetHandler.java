@@ -69,6 +69,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.apache.ibatis.util.MapUtil;
 
 /**
+ * 默认的结果处理器
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Iwao AVE!
@@ -398,7 +399,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
   // GET VALUE FROM ROW FOR SIMPLE RESULT MAP
   //
-
   private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix) throws SQLException {
     final ResultLoaderMap lazyLoader = new ResultLoaderMap();
     Object rowValue = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);

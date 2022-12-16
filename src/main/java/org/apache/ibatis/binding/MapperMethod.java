@@ -38,7 +38,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
-/**
+/** //mapper.class的方法封装为此类，解析Mapper.class的返回值类型，还有解析@Param注解，等等，所以MapperMethod是被缓存的
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
@@ -73,7 +73,7 @@ public class MapperMethod {
         break;
       }
       case SELECT:
-        if (method.returnsVoid() && method.hasResultHandler()) {
+        if (method.returnsVoid() && method.hasResultHandler()) { //mapper.class的方法返回是空并且有resultHandler
           executeWithResultHandler(sqlSession, args);
           result = null;
         } else if (method.returnsMany()) {
@@ -215,7 +215,7 @@ public class MapperMethod {
     }
 
   }
-
+  //封装方法的全限定名，Sql语句的类型（select update delete insert）其中之一
   public static class SqlCommand {
 
     private final String name;
@@ -225,7 +225,7 @@ public class MapperMethod {
       final String methodName = method.getName();
       final Class<?> declaringClass = method.getDeclaringClass();
       MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
-          configuration);
+          configuration);//就是一些<insert></insert>等等封装为MappedStatement，此步目的就是找到该类的method的对应的<insert>
       if (ms == null) {
         if (method.getAnnotation(Flush.class) != null) {
           name = null;
@@ -236,7 +236,7 @@ public class MapperMethod {
         }
       } else {
         name = ms.getId();
-        type = ms.getSqlCommandType();
+        type = ms.getSqlCommandType(); //就是<insert></insert><select></select><delete></delete><update></update>的类型
         if (type == SqlCommandType.UNKNOWN) {
           throw new BindingException("Unknown execution method for: " + name);
         }
@@ -271,7 +271,7 @@ public class MapperMethod {
       return null;
     }
   }
-
+  //将mapper.class的方法签名封装为此类,解析参数类型，返回值，ResultHandler等等
   public static class MethodSignature {
 
     private final boolean returnsMany;
@@ -286,7 +286,7 @@ public class MapperMethod {
     private final ParamNameResolver paramNameResolver;
 
     public MethodSignature(Configuration configuration, Class<?> mapperInterface, Method method) {
-      Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
+      Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface); //解析返回值类型
       if (resolvedReturnType instanceof Class<?>) {
         this.returnType = (Class<?>) resolvedReturnType;
       } else if (resolvedReturnType instanceof ParameterizedType) {
@@ -300,8 +300,8 @@ public class MapperMethod {
       this.returnsOptional = Optional.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
       this.returnsMap = this.mapKey != null;
-      this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
-      this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
+      this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);//找到分页类在方法参数中的位置
+      this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class); //找到方法签名的ResultHandler的位置，也就是说Mapper.class的方法可以传入ResultHandler，只能传入一个
       this.paramNameResolver = new ParamNameResolver(configuration, method);
     }
 
@@ -359,7 +359,7 @@ public class MapperMethod {
       Integer index = null;
       final Class<?>[] argTypes = method.getParameterTypes();
       for (int i = 0; i < argTypes.length; i++) {
-        if (paramType.isAssignableFrom(argTypes[i])) {
+        if (paramType.isAssignableFrom(argTypes[i])) { //paramType是不是与目标类相同，或是其超类
           if (index == null) {
             index = i;
           } else {

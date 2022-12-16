@@ -45,6 +45,7 @@ import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ * Executor持有一个Transaction和Configuration
  * @author Clinton Begin
  */
 public abstract class BaseExecutor implements Executor {
@@ -52,11 +53,11 @@ public abstract class BaseExecutor implements Executor {
   private static final Log log = LogFactory.getLog(BaseExecutor.class);
 
   protected Transaction transaction;
-  protected Executor wrapper;
+  protected Executor wrapper; //装饰该对象的对象
 
-  protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
-  protected PerpetualCache localCache;
-  protected PerpetualCache localOutputParameterCache;
+  protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads; //deferred:延期的
+  protected PerpetualCache localCache; //一级缓存？只缓存该SqlSession的查询结果？
+  protected PerpetualCache localOutputParameterCache; //缓存是入参，不知道有啥用
   protected Configuration configuration;
 
   protected int queryStack;
@@ -136,6 +137,7 @@ public abstract class BaseExecutor implements Executor {
     return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
   }
 
+  //从一级缓存或者数据库获取数据
   @SuppressWarnings("unchecked")
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
@@ -150,10 +152,10 @@ public abstract class BaseExecutor implements Executor {
     try {
       queryStack++;
       list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
-      if (list != null) {
+      if (list != null) { //从一级缓存查询到的内容不为null
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
       } else {
-        list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
+        list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql); //查询结果会放入一级缓存
       }
     } finally {
       queryStack--;
@@ -320,7 +322,7 @@ public abstract class BaseExecutor implements Executor {
 
   private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     List<E> list;
-    localCache.putObject(key, EXECUTION_PLACEHOLDER);
+    localCache.putObject(key, EXECUTION_PLACEHOLDER); //一级缓存放入一个暂时值，让其他线程的查询立马返回？不是不能被共享吗？
     try {
       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
     } finally {

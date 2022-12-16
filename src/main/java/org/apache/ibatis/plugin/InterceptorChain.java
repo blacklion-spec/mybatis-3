@@ -26,7 +26,7 @@ public class InterceptorChain {
 
   private final List<Interceptor> interceptors = new ArrayList<>();
 
-  public Object pluginAll(Object target) {
+  public Object pluginAll(Object target) {//target在链中流过被处理，返回最终处理的target
     for (Interceptor interceptor : interceptors) {
       target = interceptor.plugin(target);
     }

@@ -91,7 +91,7 @@ public class Resources {
 
   /**
    * Returns a resource on the classpath as a Stream object
-   *
+   * 通过类加载器加载类路径资源
    * @param resource The resource to find
    * @return The resource
    * @throws java.io.IOException If the resource cannot be found or read
@@ -214,7 +214,7 @@ public class Resources {
    */
   public static InputStream getUrlAsStream(String urlString) throws IOException {
     URL url = new URL(urlString);
-    URLConnection conn = url.openConnection();
+    URLConnection conn = url.openConnection(); //URL可以加载本地或者远程资源！作为加载配置文件非常有效啊
     return conn.getInputStream();
   }
 

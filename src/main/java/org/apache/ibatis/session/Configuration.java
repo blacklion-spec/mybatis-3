@@ -101,7 +101,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  */
 public class Configuration {
 
-  protected Environment environment;
+  protected Environment environment; //被激活的环境 default
 
   protected boolean safeRowBoundsEnabled;
   protected boolean safeResultHandlerEnabled = true;
@@ -109,7 +109,7 @@ public class Configuration {
   protected boolean aggressiveLazyLoading;
   protected boolean multipleResultSetsEnabled = true;
   protected boolean useGeneratedKeys;
-  protected boolean useColumnLabel = true;
+  protected boolean useColumnLabel = true; //为true，使用 as ·xx· 列名，否则忽略 as，全部使用表列名
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls;
   protected boolean useActualParamName = true;
@@ -132,15 +132,15 @@ public class Configuration {
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
 
-  protected Properties variables = new Properties();
-  protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
-  protected ObjectFactory objectFactory = new DefaultObjectFactory();
-  protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
+  protected Properties variables = new Properties(); //从config.xml与方法参数传入的所有proerties
+  protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory(); //反射器工厂 反射器：proerties与getter/setter之前的映射
+  protected ObjectFactory objectFactory = new DefaultObjectFactory(); //对象工厂（创建对象的工厂） 可以从配置文件中设置
+  protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();//对象包装工厂 可以从配置文件中设置
 
   protected boolean lazyLoadingEnabled = false;
-  protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
+  protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL //延迟加载对象创建工厂
 
-  protected String databaseId;
+  protected String databaseId; //数据源名称
   /**
    * Configuration factory class.
    * Used to create Configuration for loading deserialized unread properties.
@@ -149,26 +149,26 @@ public class Configuration {
    */
   protected Class<?> configurationFactory;
 
-  protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
-  protected final InterceptorChain interceptorChain = new InterceptorChain();
-  protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);
+  protected final MapperRegistry mapperRegistry = new MapperRegistry(this); //mapper.class注册在此处
+  protected final InterceptorChain interceptorChain = new InterceptorChain(); //所有的插件
+  protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);//JAVA类型与JDBC类型之间转换的处理器
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
-  protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
-
-  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
+  protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();//生成动态sql的脚本语言注册器
+  //key : namesapce+.id
+  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection") //mapper.xml <insert>等标签 key:namesapce.标签id
       .conflictMessageProducer((savedValue, targetValue) ->
           ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
-  protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
-  protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
-  protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
+  protected final Map<String, Cache> caches = new StrictMap<>("Caches collection"); //缓存key:nameSpace value缓存实现类
+  protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection"); //Mapper.xml的<resultMap>
+  protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection"); //mapper.xml的<parameterMap id="" type=""> key是namespace+id
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>("Key Generators collection");
 
-  protected final Set<String> loadedResources = new HashSet<>();
-  protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");
+  protected final Set<String> loadedResources = new HashSet<>(); //已经加载的资源 目前看到Mapper.class mapper.xml,作用：防止资源重复加载
+  protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers"); //sql碎片
 
-  protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<>();
-  protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>();
-  protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<>();
+  protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<>(); //解析错误的<select><update><delete>标签
+  protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>(); //在cache不存在namesapece的resolver添加到此处，会被再次解析
+  protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<>(); //报错的ResultMapResolver，等待被再次解析，解析成功并移除
   protected final Collection<MethodResolver> incompleteMethods = new LinkedList<>();
 
   /*
@@ -176,7 +176,7 @@ public class Configuration {
    * references a cache bound to another namespace and the value is the
    * namespace which the actual cache is bound to.
    */
-  protected final Map<String, String> cacheRefMap = new HashMap<>();
+  protected final Map<String, String> cacheRefMap = new HashMap<>(); //Mapper.xml <cache-ref namespace=""/>
 
   public Configuration(Environment environment) {
     this();
@@ -190,7 +190,7 @@ public class Configuration {
     typeAliasRegistry.registerAlias("JNDI", JndiDataSourceFactory.class);
     typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class);
     typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class);
-
+    //缓存策略
     typeAliasRegistry.registerAlias("PERPETUAL", PerpetualCache.class);
     typeAliasRegistry.registerAlias("FIFO", FifoCache.class);
     typeAliasRegistry.registerAlias("LRU", LruCache.class);

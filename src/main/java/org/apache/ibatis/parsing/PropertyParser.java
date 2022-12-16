@@ -18,6 +18,7 @@ package org.apache.ibatis.parsing;
 import java.util.Properties;
 
 /**
+ * ${xx}占位符解析器
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -50,6 +51,7 @@ public class PropertyParser {
     // Prevent Instantiation
   }
 
+  //如果string含有占位符，用variables中的数据替换
   public static String parse(String string, Properties variables) {
     VariableTokenHandler handler = new VariableTokenHandler(variables);
     GenericTokenParser parser = new GenericTokenParser("${", "}", handler);

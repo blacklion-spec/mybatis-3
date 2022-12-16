@@ -40,6 +40,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
 /**
+ * SqlSesson 的所有JDBC操作都是由Executor去执行的，Executor才包含一个Transaction，Transaction含有dataSource
  * The default implementation for {@link SqlSession}.
  * Note that this class is not Thread-Safe.
  *
@@ -219,7 +220,7 @@ public class DefaultSqlSession implements SqlSession {
   @Override
   public void commit(boolean force) {
     try {
-      executor.commit(isCommitOrRollbackRequired(force));
+      executor.commit(isCommitOrRollbackRequired(force)); //将暂时一级缓存刷新到一级缓存
       dirty = false;
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error committing transaction.  Cause: " + e, e);
@@ -259,7 +260,7 @@ public class DefaultSqlSession implements SqlSession {
   @Override
   public void close() {
     try {
-      executor.close(isCommitOrRollbackRequired(false));
+      executor.close(isCommitOrRollbackRequired(false)); //清空一级缓存，将临时缓存刷新到二级缓存
       closeCursors();
       dirty = false;
     } finally {
@@ -285,6 +286,7 @@ public class DefaultSqlSession implements SqlSession {
     return configuration;
   }
 
+  //获取Mapper.class代理类
   @Override
   public <T> T getMapper(Class<T> type) {
     return configuration.getMapper(type, this);

@@ -32,7 +32,7 @@ public class MapUtil {
     if (value != null) {
       return value;
     }
-    return map.computeIfAbsent(key, mappingFunction);
+    return map.computeIfAbsent(key, mappingFunction); //key不存在的时候做其他操作，并放入的map中
   }
 
   /**

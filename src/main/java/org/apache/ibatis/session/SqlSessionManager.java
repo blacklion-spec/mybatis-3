@@ -30,12 +30,13 @@ import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
+ * 装饰真正的SqlSessionFactory，每个线程持有自己SqlSession
  * @author Larry Meadors
  */
 public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
-  private final SqlSessionFactory sqlSessionFactory;
-  private final SqlSession sqlSessionProxy;
+  private final SqlSessionFactory sqlSessionFactory; //装饰
+  private final SqlSession sqlSessionProxy; //为SqlSession生成的代理类
 
   private final ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<>();
 

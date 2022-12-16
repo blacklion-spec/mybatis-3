@@ -33,7 +33,7 @@ import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
-/**
+/**mapper.xml的<insert></><delete></delete><insert></insert>解析器 构建为MappedStatement
  * @author Clinton Begin
  */
 public class XMLStatementBuilder extends BaseBuilder {

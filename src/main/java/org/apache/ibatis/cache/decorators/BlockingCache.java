@@ -38,7 +38,7 @@ public class BlockingCache implements Cache {
 
   private long timeout;
   private final Cache delegate;
-  private final ConcurrentHashMap<Object, CountDownLatch> locks;
+  private final ConcurrentHashMap<Object, CountDownLatch> locks; //发现个东西：CountDownLatch不需要在同步块里面
 
   public BlockingCache(Cache delegate) {
     this.delegate = delegate;
@@ -66,7 +66,7 @@ public class BlockingCache implements Cache {
 
   @Override
   public Object getObject(Object key) {
-    acquireLock(key);
+    acquireLock(key); //await() 原来存在值会await 不存在直接获取值
     Object value = delegate.getObject(key);
     if (value != null) {
       releaseLock(key);

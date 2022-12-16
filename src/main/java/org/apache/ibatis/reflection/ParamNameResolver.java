@@ -30,14 +30,15 @@ import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
-
+//封装Mapper.class的方法参数下标（第一个参数位置就是0，以此类推），方法参数名
+//还要把
 public class ParamNameResolver {
 
   public static final String GENERIC_NAME_PREFIX = "param";
 
   private final boolean useActualParamName;
 
-  /**
+  /** //将Mapper.class的方法参数转换为sql参数 @Param注解
    * <p>
    * The key is the index and the value is the name of the parameter.<br />
    * The name is obtained from {@link Param} if specified. When {@link Param} is not specified,
@@ -50,7 +51,7 @@ public class ParamNameResolver {
    * <li>aMethod(int a, RowBounds rb, int b) -&gt; {{0, "0"}, {2, "1"}}</li>
    * </ul>
    */
-  private final SortedMap<Integer, String> names;
+  private final SortedMap<Integer, String> names; //方法参数顺序下标；参数名称
 
   private boolean hasParamAnnotation;
 
@@ -58,7 +59,7 @@ public class ParamNameResolver {
     this.useActualParamName = config.isUseActualParamName();
     final Class<?>[] paramTypes = method.getParameterTypes();
     final Annotation[][] paramAnnotations = method.getParameterAnnotations();
-    final SortedMap<Integer, String> map = new TreeMap<>();
+    final SortedMap<Integer, String> map = new TreeMap<>(); //key:参数的位置下标 value：参数的名字 没有@Param就是原名字
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
     for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {

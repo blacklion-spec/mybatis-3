@@ -35,6 +35,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 
 /**
+ * 用户构建Cache,既是指挥者又是建造者
  * @author Clinton Begin
  */
 public class CacheBuilder {
@@ -94,12 +95,12 @@ public class CacheBuilder {
     Cache cache = newBaseCacheInstance(implementation, id);
     setCacheProperties(cache);
     // issue #352, do not apply decorators to custom caches
-    if (PerpetualCache.class.equals(cache.getClass())) {
+    if (PerpetualCache.class.equals(cache.getClass())) { //只有是这个类才会进行装饰，自己实现的类是不会进行装饰的,size,清楚间隔都不会起作用
       for (Class<? extends Cache> decorator : decorators) {
-        cache = newCacheDecoratorInstance(decorator, cache);
+        cache = newCacheDecoratorInstance(decorator, cache); //decorator装饰者 这一步进行装饰
         setCacheProperties(cache);
       }
-      cache = setStandardDecorators(cache);
+      cache = setStandardDecorators(cache); //设置属性  flushInterval等等
     } else if (!LoggingCache.class.isAssignableFrom(cache.getClass())) {
       cache = new LoggingCache(cache);
     }
@@ -115,23 +116,23 @@ public class CacheBuilder {
     }
   }
 
-  private Cache setStandardDecorators(Cache cache) {
+  private Cache setStandardDecorators(Cache cache) { //cache已经被LruCache装饰
     try {
       MetaObject metaCache = SystemMetaObject.forObject(cache);
-      if (size != null && metaCache.hasSetter("size")) {
+      if (size != null && metaCache.hasSetter("size")) { //判断是否有setSize方法
         metaCache.setValue("size", size);
       }
       if (clearInterval != null) {
-        cache = new ScheduledCache(cache);
+        cache = new ScheduledCache(cache); //装饰
         ((ScheduledCache) cache).setClearInterval(clearInterval);
       }
       if (readWrite) {
-        cache = new SerializedCache(cache);
+        cache = new SerializedCache(cache); //再进行装饰
       }
-      cache = new LoggingCache(cache);
-      cache = new SynchronizedCache(cache);
+      cache = new LoggingCache(cache); //装饰 打印缓存命中率
+      cache = new SynchronizedCache(cache); //装饰 加上同步锁
       if (blocking) {
-        cache = new BlockingCache(cache);
+        cache = new BlockingCache(cache); //装饰
       }
       return cache;
     } catch (Exception e) {

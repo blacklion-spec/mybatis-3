@@ -28,6 +28,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
+ * 执行SQL的语句的执行器
  * @author Clinton Begin
  */
 public interface Executor {
@@ -62,6 +63,7 @@ public interface Executor {
 
   boolean isClosed();
 
+  //设置当前Executor的装饰者
   void setExecutorWrapper(Executor executor);
 
 }

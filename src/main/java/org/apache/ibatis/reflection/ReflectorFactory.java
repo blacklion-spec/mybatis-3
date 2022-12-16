@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.reflection;
 
+//创建Reflector的工厂，也是工厂方法模式
 public interface ReflectorFactory {
 
   boolean isClassCacheEnabled();

@@ -50,6 +50,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * 解析Mapper.xml
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -94,12 +95,12 @@ public class XMLMapperBuilder extends BaseBuilder {
     if (!configuration.isResourceLoaded(resource)) {
       configurationElement(parser.evalNode("/mapper"));
       configuration.addLoadedResource(resource);
-      bindMapperForNamespace();
+      bindMapperForNamespace();//加载mapper.xml对应的mapper.class
     }
 
-    parsePendingResultMaps();
-    parsePendingCacheRefs();
-    parsePendingStatements();
+    parsePendingResultMaps(); //再次解析报错的<resultMap>
+    parsePendingCacheRefs(); //同上
+    parsePendingStatements(); //同上
   }
 
   public XNode getSqlFragment(String refid) {
@@ -113,7 +114,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
-      cacheRefElement(context.evalNode("cache-ref"));
+      cacheRefElement(context.evalNode("cache-ref"));//指定相同的namespace。会使用相同的缓存 //没找到相同的namesapce会放入incompleteCacheRefs（未完成的cacherefs）
       cacheElement(context.evalNode("cache"));
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
       resultMapElements(context.evalNodes("/mapper/resultMap"));
@@ -142,7 +143,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
-  private void parsePendingResultMaps() {
+  private void parsePendingResultMaps() { //pending:待处理的，悬而未决的
     Collection<ResultMapResolver> incompleteResultMaps = configuration.getIncompleteResultMaps();
     synchronized (incompleteResultMaps) {
       Iterator<ResultMapResolver> iter = incompleteResultMaps.iterator();
@@ -201,14 +202,14 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private void cacheElement(XNode context) {
     if (context != null) {
-      String type = context.getStringAttribute("type", "PERPETUAL");
-      Class<? extends Cache> typeClass = typeAliasRegistry.resolveAlias(type);
-      String eviction = context.getStringAttribute("eviction", "LRU");
+      String type = context.getStringAttribute("type", "PERPETUAL"); //PERPETUAL长期的
+      Class<? extends Cache> typeClass = typeAliasRegistry.resolveAlias(type); //cache的实现类 LRU SOFT WEAK
+      String eviction = context.getStringAttribute("eviction", "LRU"); //淘汰策略
       Class<? extends Cache> evictionClass = typeAliasRegistry.resolveAlias(eviction);
-      Long flushInterval = context.getLongAttribute("flushInterval");
-      Integer size = context.getIntAttribute("size");
-      boolean readWrite = !context.getBooleanAttribute("readOnly", false);
-      boolean blocking = context.getBooleanAttribute("blocking", false);
+      Long flushInterval = context.getLongAttribute("flushInterval"); //刷新间隔
+      Integer size = context.getIntAttribute("size"); //大小
+      boolean readWrite = !context.getBooleanAttribute("readOnly", false); //缓存只读属性
+      boolean blocking = context.getBooleanAttribute("blocking", false); //阻塞
       Properties props = context.getChildrenAsProperties();
       builderAssistant.useNewCache(typeClass, evictionClass, flushInterval, size, readWrite, blocking, props);
     }
@@ -268,7 +269,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     List<ResultMapping> resultMappings = new ArrayList<>(additionalResultMappings);
     List<XNode> resultChildren = resultMapNode.getChildren();
     for (XNode resultChild : resultChildren) {
-      if ("constructor".equals(resultChild.getName())) {
+      if ("constructor".equals(resultChild.getName())) { //<constructor>标签
         processConstructorElement(resultChild, typeClass, resultMappings);
       } else if ("discriminator".equals(resultChild.getName())) {
         discriminator = processDiscriminatorElement(resultChild, typeClass, resultMappings);
@@ -346,8 +347,8 @@ public class XMLMapperBuilder extends BaseBuilder {
     for (XNode context : list) {
       String databaseId = context.getStringAttribute("databaseId");
       String id = context.getStringAttribute("id");
-      id = builderAssistant.applyCurrentNamespace(id, false);
-      if (databaseIdMatchesCurrent(id, databaseId, requiredDatabaseId)) {
+      id = builderAssistant.applyCurrentNamespace(id, false); //namespace.id
+      if (databaseIdMatchesCurrent(id, databaseId, requiredDatabaseId)) { //databaseId的作用是可以激活那些sql片段
         sqlFragments.put(id, context);
       }
     }
