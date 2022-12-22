@@ -122,7 +122,7 @@ public class Configuration {
   protected Class<? extends Log> logImpl;
   protected Class<? extends VFS> vfsImpl;
   protected Class<?> defaultSqlProviderType;
-  protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
+  protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION; //一级缓存的范围
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
   protected Integer defaultStatementTimeout;
@@ -689,7 +689,7 @@ public class Configuration {
 
   public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
-    statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
+    statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler); //回调插件
     return statementHandler;
   }
 

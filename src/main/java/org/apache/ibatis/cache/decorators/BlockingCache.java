@@ -23,6 +23,8 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 
 /**
+ * 简单的阻塞装饰器 EhCache的BlockingCache装饰器的简单而低效的版本。当在缓存中找不到元素时，它会对缓存键设置锁。这样，其他线程将等待该元素被填充，而不是访问数据库。 从本质上讲，这种实现在使用不当时可能会导致死锁
+ *
  * <p>Simple blocking decorator
  *
  * <p>Simple and inefficient version of EhCache's BlockingCache decorator.
@@ -66,7 +68,7 @@ public class BlockingCache implements Cache {
 
   @Override
   public Object getObject(Object key) {
-    acquireLock(key); //await() 原来存在值会await 不存在直接获取值
+    acquireLock(key); //await()
     Object value = delegate.getObject(key);
     if (value != null) {
       releaseLock(key);
@@ -101,7 +103,7 @@ public class BlockingCache implements Cache {
                 "Couldn't get a lock in " + timeout + " for the key " + key + " at the cache " + delegate.getId());
           }
         } else {
-          latch.await();
+          latch.await(); //
         }
       } catch (InterruptedException e) {
         throw new CacheException("Got interrupted while trying to acquire lock for key " + key, e);

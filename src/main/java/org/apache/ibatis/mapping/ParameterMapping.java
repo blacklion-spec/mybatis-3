@@ -23,7 +23,7 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
- * Mapper.xml的parameterMap 的 <parameter property=""></parameter>
+ * 方法参数封装为此类，描述javaType jdbcType
  * @author Clinton Begin
  */
 public class ParameterMapping {

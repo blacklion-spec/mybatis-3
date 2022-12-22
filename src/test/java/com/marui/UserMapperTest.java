@@ -1,13 +1,16 @@
 package com.marui;
 
 import com.marui.config.MybatisUtil;
+import com.marui.entity.Parent;
 import com.marui.entity.User;
 import com.marui.handler.SimpleReturnHandler;
+import com.marui.mapper.ParentMapper;
 import com.marui.mapper.UserMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Test;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -36,7 +39,9 @@ public class UserMapperTest {
       SqlSessionFactory sqlSessionFactory = MybatisUtil.getSqlSessionFactory();
       //DefaultSqlSession
       try (SqlSession sqlSession = sqlSessionFactory.openSession()){
-        sqlSession.select("com.marui.mapper.UserMapper.selectUser", 5,new SimpleReturnHandler());
+        final UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+        User user = mapper.selectUser(5,new SimpleReturnHandler()); //为啥没用呢
+        System.out.println(user);
       }
     }
 
@@ -62,5 +67,32 @@ public class UserMapperTest {
       System.out.println(user0);
     }
   }
+
+
+  @Test
+  public void optionalTest() {
+    SqlSessionFactory sqlSessionFactory = MybatisUtil.getSqlSessionFactory();
+    //DefaultSqlSession
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()){
+      final UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+      Optional<User> user = mapper.selectUserOp(5);
+      System.out.println(user.get());
+    }
+  }
+
+
+  @Test
+  public void insertTest() {
+    SqlSessionFactory sqlSessionFactory = MybatisUtil.getSqlSessionFactory();
+    //DefaultSqlSession
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()){
+      final UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+      User user = new User();
+
+    }
+  }
+
+
+
 
 }

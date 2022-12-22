@@ -41,7 +41,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
   protected final Configuration configuration;
   protected final ObjectFactory objectFactory;
   protected final TypeHandlerRegistry typeHandlerRegistry;
-  protected final ResultSetHandler resultSetHandler;
+  protected final ResultSetHandler resultSetHandler; //从数据库查询之后的数据处理器，映射为对象？
   protected final ParameterHandler parameterHandler;
 
   protected final Executor executor;

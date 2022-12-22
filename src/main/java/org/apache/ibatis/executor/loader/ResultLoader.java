@@ -35,6 +35,7 @@ import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 
 /**
+ * 职责 真正去完成延迟加载
  * @author Clinton Begin
  */
 public class ResultLoader {
@@ -75,7 +76,7 @@ public class ResultLoader {
   private <E> List<E> selectList() throws SQLException {
     Executor localExecutor = executor;
     if (Thread.currentThread().getId() != this.creatorThreadId || localExecutor.isClosed()) {
-      localExecutor = newExecutor();
+      localExecutor = newExecutor(); //创建一个新的Executor去查询数据库
     }
     try {
       return localExecutor.query(mappedStatement, parameterObject, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER, cacheKey, boundSql);

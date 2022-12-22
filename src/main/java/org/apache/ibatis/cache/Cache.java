@@ -36,6 +36,8 @@ import java.util.concurrent.locks.ReadWriteLock;
  * }
  * </pre>
  *
+ * 缓存提供程序的SPI。 将为每个命名空间创建一个缓存实例。 缓存实现必须具有一个构造函数，该构造函数将缓存id作为字符串参数接收。 MyBatis将把名称空间作为id传递给构造函数。
+ *
  * @author Clinton Begin
  */
 

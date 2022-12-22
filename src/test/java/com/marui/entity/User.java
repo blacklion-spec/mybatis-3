@@ -1,5 +1,7 @@
 package com.marui.entity;
 
+import java.io.Serializable;
+
 /**
  * @author marui
  * @version 1.0.0
@@ -7,7 +9,7 @@ package com.marui.entity;
  * @Description
  * @createTime 2022年01月03日 16:33:00
  */
-public class User {
+public class User implements Serializable {
 
 
     private Integer id;

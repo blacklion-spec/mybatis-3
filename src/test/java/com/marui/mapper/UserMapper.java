@@ -1,8 +1,10 @@
 package com.marui.mapper;
 
 import com.marui.entity.User;
-import com.marui.handler.SimpleReturnHandler;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.ResultHandler;
+
+import java.util.Optional;
 
 /**
  * @author marui
@@ -16,6 +18,11 @@ public interface UserMapper {
     User selectUser(int id);
 
 
+    Optional<User> selectUserOp(int id);
+
+
     boolean insert(@Param("user") User user);
+
+  User selectUser(int id, ResultHandler<User> resultHandler);
 
 }

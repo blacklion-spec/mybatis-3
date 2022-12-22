@@ -28,6 +28,7 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
 /**
+ * 描述实体对象的元信息，对实体属性进行赋值
  * @author Clinton Begin
  */
 public class MetaObject {

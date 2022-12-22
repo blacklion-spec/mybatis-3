@@ -69,7 +69,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.apache.ibatis.util.MapUtil;
 
 /**
- * 默认的结果处理器
+ * 默认的结果处理器，ResultSet映射为java对象
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Iwao AVE!
@@ -400,15 +400,15 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // GET VALUE FROM ROW FOR SIMPLE RESULT MAP
   //
   private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix) throws SQLException {
-    final ResultLoaderMap lazyLoader = new ResultLoaderMap();
+    final ResultLoaderMap lazyLoader = new ResultLoaderMap(); //lazyLoader是啥玩意啊
     Object rowValue = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
     if (rowValue != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
       final MetaObject metaObject = configuration.newMetaObject(rowValue);
       boolean foundValues = this.useConstructorMappings;
       if (shouldApplyAutomaticMappings(resultMap, false)) {
-        foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
+        foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues; //todo:根据列名自动映射
       }
-      foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
+      foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues; //todo:根据Result映射
       foundValues = lazyLoader.size() > 0 || foundValues;
       rowValue = foundValues || configuration.isReturnInstanceForEmptyRow() ? rowValue : null;
     }
@@ -634,17 +634,17 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
   // INSTANTIATION & CONSTRUCTOR MAPPING
   //
-
+  //创建返回类型的空对象
   private Object createResultObject(ResultSetWrapper rsw, ResultMap resultMap, ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
     this.useConstructorMappings = false; // reset previous mapping result
     final List<Class<?>> constructorArgTypes = new ArrayList<>();
     final List<Object> constructorArgs = new ArrayList<>();
-    Object resultObject = createResultObject(rsw, resultMap, constructorArgTypes, constructorArgs, columnPrefix);
+    Object resultObject = createResultObject(rsw, resultMap, constructorArgTypes, constructorArgs, columnPrefix); //还未映射的实体对象
     if (resultObject != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
       final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
       for (ResultMapping propertyMapping : propertyMappings) {
         // issue gcode #109 && issue #149
-        if (propertyMapping.getNestedQueryId() != null && propertyMapping.isLazy()) {
+        if (propertyMapping.getNestedQueryId() != null && propertyMapping.isLazy()) { //todo:懒加载 创建代理对象
           resultObject = configuration.getProxyFactory().createProxy(resultObject, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
           break;
         }
@@ -659,7 +659,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final Class<?> resultType = resultMap.getType();
     final MetaClass metaType = MetaClass.forClass(resultType, reflectorFactory);
     final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
-    if (hasTypeHandlerForResultObject(rsw, resultType)) {
+    if (hasTypeHandlerForResultObject(rsw, resultType)) { //todo：实体类也可以由类型处理器处理，由用户自己处理映射！
       return createPrimitiveResultObject(rsw, resultMap, columnPrefix);
     } else if (!constructorMappings.isEmpty()) {
       return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs, columnPrefix);

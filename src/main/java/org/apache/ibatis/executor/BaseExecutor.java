@@ -155,7 +155,7 @@ public abstract class BaseExecutor implements Executor {
       if (list != null) { //从一级缓存查询到的内容不为null
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
       } else {
-        list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql); //查询结果会放入一级缓存
+        list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql); //查询结果会放入一级缓存 todo:真正从数据库查询
       }
     } finally {
       queryStack--;

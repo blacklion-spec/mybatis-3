@@ -37,6 +37,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
 /**
+ * 解析ResultSet
  * @author Iwao AVE!
  */
 public class ResultSetWrapper {

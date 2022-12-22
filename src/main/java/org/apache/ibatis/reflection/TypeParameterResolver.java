@@ -85,10 +85,10 @@ public class TypeParameterResolver {
 
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
     if (type instanceof TypeVariable) {
-      return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
-    } else if (type instanceof ParameterizedType) {
+      return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass); //方法返回值是泛型T
+    } else if (type instanceof ParameterizedType) { //方法返回值是例如Optional<T>
       return resolveParameterizedType((ParameterizedType) type, srcType, declaringClass);
-    } else if (type instanceof GenericArrayType) {
+    } else if (type instanceof GenericArrayType) { //泛型数组，描述的是形如：A<T>[]或T[]类型。
       return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass);
     } else {
       return type;

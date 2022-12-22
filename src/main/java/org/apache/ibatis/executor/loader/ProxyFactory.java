@@ -22,6 +22,7 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 懒加载 创建代理对象工厂，工厂方法模式
  * @author Eduardo Macarron
  */
 public interface ProxyFactory {

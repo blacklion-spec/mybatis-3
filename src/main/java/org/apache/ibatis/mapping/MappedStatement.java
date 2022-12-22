@@ -41,10 +41,10 @@ public final class MappedStatement {
   private StatementType statementType;
   private ResultSetType resultSetType;
   private SqlSource sqlSource;
-  private Cache cache;
+  private Cache cache; //二级缓存
   private ParameterMap parameterMap;
   private List<ResultMap> resultMaps;
-  private boolean flushCacheRequired;
+  private boolean flushCacheRequired; //时候需要刷新缓存  insert update 或者是 明确标识刷新 应该会触发
   private boolean useCache;
   private boolean resultOrdered;
   private SqlCommandType sqlCommandType;

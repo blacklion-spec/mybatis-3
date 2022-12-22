@@ -218,8 +218,8 @@ public class MapperMethod {
   //封装方法的全限定名，Sql语句的类型（select update delete insert）其中之一
   public static class SqlCommand {
 
-    private final String name;
-    private final SqlCommandType type;
+    private final String name; //方法的全限定名
+    private final SqlCommandType type; //insert|update等等
 
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
       final String methodName = method.getName();
@@ -253,14 +253,14 @@ public class MapperMethod {
 
     private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
         Class<?> declaringClass, Configuration configuration) {
-      String statementId = mapperInterface.getName() + "." + methodName;
+      String statementId = mapperInterface.getName() + "." + methodName; //<insert id=""}
       if (configuration.hasStatement(statementId)) {
         return configuration.getMappedStatement(statementId);
       } else if (mapperInterface.equals(declaringClass)) {
         return null;
       }
       for (Class<?> superInterface : mapperInterface.getInterfaces()) {
-        if (declaringClass.isAssignableFrom(superInterface)) {
+        if (declaringClass.isAssignableFrom(superInterface)) { //找到声明该方法的接口，又可能方法是通过继承而来的
           MappedStatement ms = resolveMappedStatement(superInterface, methodName,
               declaringClass, configuration);
           if (ms != null) {
@@ -274,7 +274,7 @@ public class MapperMethod {
   //将mapper.class的方法签名封装为此类,解析参数类型，返回值，ResultHandler等等
   public static class MethodSignature {
 
-    private final boolean returnsMany;
+    private final boolean returnsMany; //返回数组或者集合则为true
     private final boolean returnsMap;
     private final boolean returnsVoid;
     private final boolean returnsCursor;

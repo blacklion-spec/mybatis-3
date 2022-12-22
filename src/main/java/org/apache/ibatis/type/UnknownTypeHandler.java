@@ -28,6 +28,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 不指定jdbc类型的TypeHandler
  * @author Clinton Begin
  */
 public class UnknownTypeHandler extends BaseTypeHandler<Object> {
@@ -45,7 +46,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
    */
   public UnknownTypeHandler(Configuration configuration) {
     this.config = configuration;
-    this.typeHandlerRegistrySupplier = configuration::getTypeHandlerRegistry;
+    this.typeHandlerRegistrySupplier = configuration::getTypeHandlerRegistry; //todo:没看懂呢
   }
 
   /**
@@ -64,7 +65,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
   public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
       throws SQLException {
     TypeHandler handler = resolveTypeHandler(parameter, jdbcType);
-    handler.setParameter(ps, i, parameter, jdbcType);
+    handler.setParameter(ps, i, parameter, jdbcType); //通过TypeHandler给PreparedStatement设置参数
   }
 
   @Override

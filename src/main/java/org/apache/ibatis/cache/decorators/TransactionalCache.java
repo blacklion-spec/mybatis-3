@@ -26,12 +26,17 @@ import org.apache.ibatis.logging.LogFactory;
 
 /**包装Cache
  * 二级缓存事务性缓冲区,事务失败清楚缓冲区，Commit的时候才将键值对刷新到真正的cache
- * The 2nd level cache transactional buffer.
+ * The 2nd level cache transactional buffer. 二级缓存事务缓冲区。
  * <p>
  * This class holds all cache entries that are to be added to the 2nd level cache during a Session.
  * Entries are sent to the cache when commit is called or discarded if the Session is rolled back.
  * Blocking cache support has been added. Therefore any get() that returns a cache miss
  * will be followed by a put() so any lock associated with the key can be released.
+ *
+ * 该类保存会话期间要添加到第2级缓存中的所有缓存项。
+ * 当调用commit时，表项被发送到缓存，如果Session回滚则被丢弃。
+ * 增加了阻塞缓存支持。因此，任何返回缓存失败的get()
+ * 将后面跟着一个put()，这样与该密钥关联的任何锁都可以被释放。
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
@@ -42,8 +47,8 @@ public class TransactionalCache implements Cache {
 
   private final Cache delegate;
   private boolean clearOnCommit;
-  private final Map<Object, Object> entriesToAddOnCommit;
-  private final Set<Object> entriesMissedInCache;
+  private final Map<Object, Object> entriesToAddOnCommit; //commit时，刷新到二级缓存
+  private final Set<Object> entriesMissedInCache; //缓存未命中的键
 
   public TransactionalCache(Cache delegate) {
     this.delegate = delegate;
@@ -118,7 +123,7 @@ public class TransactionalCache implements Cache {
     }
     for (Object entry : entriesMissedInCache) {
       if (!entriesToAddOnCommit.containsKey(entry)) {
-        delegate.putObject(entry, null);
+        delegate.putObject(entry, null); //缓存未命中的刷新到二级缓存
       }
     }
   }

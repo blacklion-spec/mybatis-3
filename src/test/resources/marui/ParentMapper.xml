@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.marui.mapper.ParentMapper">
+
+
+  <resultMap id="BaseMap" type="com.marui.entity.Parent">
+    <result property="name" column="name"/>
+    <association property="son" fetchType="lazy" autoMapping="true" select="assocSql" column="id" javaType="com.marui.entity.Son">
+    </association>
+  </resultMap>
+
+  <insert id="insert">
+        insert into parent(`name`,`id`) values (#{p.name},2);
+        insert into son(`id`,`name`) values(#{p.son.id},#{p.son.name});
+  </insert>
+
+
+  <select id="assocSql" resultType="com.marui.entity.Son" >
+            select * from son where id = #{id}
+  </select>
+
+  <select id="selectAll"  databaseId="mysql" resultMap="BaseMap" >
+    select * from parent
+  </select>
+
+  <select id="selectAll" resultType="com.marui.entity.Parent" databaseId="oracle">
+    select * from parent
+  </select>
+
+
+</mapper>

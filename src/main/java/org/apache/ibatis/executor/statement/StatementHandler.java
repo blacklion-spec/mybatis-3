@@ -26,14 +26,14 @@ import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.session.ResultHandler;
 
 /**
- * 封装Statement查询行为等
+ * Statement语句处理器 设置占位符参数等等
  * @author Clinton Begin
  */
 public interface StatementHandler {
 
   Statement prepare(Connection connection, Integer transactionTimeout)
       throws SQLException;
-
+  //设置参数
   void parameterize(Statement statement)
       throws SQLException;
 

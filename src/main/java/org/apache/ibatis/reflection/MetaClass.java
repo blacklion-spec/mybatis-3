@@ -27,7 +27,7 @@ import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
- * 关于类的Getter Setter Filed的方法
+ * 描述类的元信息 就是描述实体对象
  * @author Clinton Begin
  */
 public class MetaClass {
