@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class User implements Serializable {
 
 
+
     private Integer id;
 
 
@@ -20,7 +21,6 @@ public class User implements Serializable {
 
     private String pwd;
 
-    private Gender gender;
 
 
     public Integer getId() {
@@ -47,13 +47,6 @@ public class User implements Serializable {
         this.pwd = pwd;
     }
 
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
 
     @Override
     public String toString() {
@@ -61,7 +54,6 @@ public class User implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", pwd='" + pwd + '\'' +
-                ", gender=" + gender +
                 '}';
     }
 }

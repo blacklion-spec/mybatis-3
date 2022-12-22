@@ -26,7 +26,7 @@ import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
-/**
+/**职责：注册Mapper.class 获取Mapepr.class 抽象上来说，只负责管理mapper
  * mapper.class注册在此处
  * @author Clinton Begin
  * @author Eduardo Macarron

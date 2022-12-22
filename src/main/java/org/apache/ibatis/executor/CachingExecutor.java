@@ -32,7 +32,8 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
-/**
+/**负责二级缓存
+ *
  * 装饰者模式，Configuration的cacheEnabled为true的话，会装饰另外一个Executor
  * @author Clinton Begin
  * @author Eduardo Macarron
@@ -40,7 +41,7 @@ import org.apache.ibatis.transaction.Transaction;
 public class CachingExecutor implements Executor { //一个SqlSession，一个Executor
 
   private final Executor delegate;
-  private final TransactionalCacheManager tcm = new TransactionalCacheManager(); //不知道有啥用
+  private final TransactionalCacheManager tcm = new TransactionalCacheManager(); //事务缓存关闭器，事务结束才把缓存刷新到二级缓存
 
   public CachingExecutor(Executor delegate) {
     this.delegate = delegate;
@@ -59,7 +60,7 @@ public class CachingExecutor implements Executor { //一个SqlSession，一个Ex
       if (forceRollback) {
         tcm.rollback();
       } else {
-        tcm.commit();
+        tcm.commit(); //将事务缓存刷新到二级缓存
       }
     } finally {
       delegate.close(forceRollback);
